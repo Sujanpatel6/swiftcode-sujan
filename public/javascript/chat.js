@@ -1,6 +1,6 @@
 var app = angular.module('chatApp',['ngMaterial']);
 
-app.controller('chatController',function($scope){
+app.controller('chatController',function($scope, $sce){
 
     $scope.messages = [
         { 
@@ -10,7 +10,7 @@ app.controller('chatController',function($scope){
         },
     	{ 
     		sender:"USER",
-    		text:"r u married?",
+    		text:"r u ?",
     		time:"1:05pm"
     	},
     	{
@@ -21,19 +21,27 @@ app.controller('chatController',function($scope){
 
     	{   
     		sender:"USER",
-    		text:"r u married?",
+    		text:"r u?",
     		time:"1:50pm"
     	},
     	{
     		sender:"BOT",
-    		text:"BLOCKED",
+    		text:"hi",
     		time:"1.50pm"
 
     	}];
 
-var  exampleSocket =  new  WebSocket("ws://localhost:9000/chatSocket");
-exampleSocket.onmessage  =   function  (event) {
-      var jsonData = JSON.parse(event.data);
-      console.log(jsonData);
-  };
+var  exampleSocket =  new  WebSocket("wss://swiftcode-ws-chat.herokuapp.com/chatSocket");
+    exampleSocket.onmessage  =   function  (event) {
+        var jsonData = JSON.parse(event.data);
+        jsonData.time = new Date().toLocaleTimeString();
+        $scope.messages.push(jsonData);
+        $scope.$apply(); 
+        console.log(jsonData);    
+    };
+    $scope.sendMessage = function () {    
+        exampleSocket.send($scope.userMessage);
+        $scope.userMessage = "";
+};
+$scope.trust = $sce.trustAsHtml;
 });
