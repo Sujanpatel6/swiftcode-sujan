@@ -22,7 +22,7 @@ public class FeedService {
             WSRequest feedRequest = WS.url("https://news.google.com/news");
 
             CompletionStage<WSResponse> responsePromise = feedRequest
-                    .setQueryParameter("q","keyword")
+                    .setQueryParameter("q",keyword)
                     .setQueryParameter("output","rss")
                     .get();
 
