@@ -14,33 +14,32 @@ import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutionException;
 
 public class FeedService {
-    public FeedResponse getFeedResponce(String keyword) throws ExecutionException{
-        FeedResponse feedResponceObject = new FeedResponse();
-        try
-        {
+    public FeedResponse getFeedResponse(String keyword) throws ExecutionException, InterruptedException {
+       FeedResponse feedResponseObject = new FeedResponse();
+       try{
+           WSRequest feedRequest = WS.url("https://news.google.com/news");
 
-            WSRequest feedRequest = WS.url("https://news.google.com/news");
+           CompletionStage<WSResponse> responsePromise = feedRequest
+                   .setQueryParameter("q", keyword)
+                   .setQueryParameter("output", "rss")
+                   .get();
 
-            CompletionStage<WSResponse> responsePromise = feedRequest
-                    .setQueryParameter("q",keyword)
-                    .setQueryParameter("output","rss")
-                    .get();
+           Document feedResponse = responsePromise.thenApply(WSResponse::asXml)
+                   .toCompletableFuture().get();
 
-            Document feedResponse = responsePromise.thenApply(WSResponse::asXml).toCompletableFuture().get();
-            Node item = feedResponse.getFirstChild()
-                    .getFirstChild().getChildNodes().item(9);
-            feedResponceObject.title = item.getChildNodes()
-                    .item(0).getFirstChild().getNodeValue();
-            feedResponceObject.pubDate = item.getChildNodes()
-                    .item(3).getFirstChild().getNodeValue();
-            feedResponceObject.description = item.getChildNodes()
-                    .item(4).getFirstChild().getNodeValue();
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-        return feedResponceObject;
-    }
+           Node item = feedResponse.getFirstChild()
+                   .getFirstChild().getChildNodes().item(9);
+           feedResponseObject.title = item.getChildNodes()
+                   .item(0).getFirstChild().getNodeValue();
+           feedResponseObject.pubDate = item.getChildNodes()
+                   .item(3).getFirstChild().getNodeValue();
+           feedResponseObject.description = item.getChildNodes()
+                   .item(4).getFirstChild().getNodeValue();
+       }catch (Exception e){
+           e.printStackTrace();
+       }
+       return feedResponseObject;
+   }
 
 }
 

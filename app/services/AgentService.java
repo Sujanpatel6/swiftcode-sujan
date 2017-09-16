@@ -26,7 +26,7 @@ public class AgentService {
                     .setHeader("Authorization", "Bearer 946df4ead6524dbcaeb5c6c2409462b6")
                     .get();
             JsonNode response = responsePromise.thenApply(WSResponse::asJson).toCompletableFuture().get();
-            agentResponse.keyword = response.get("result").get("parameters").get("Keyword").asText();
+            agentResponse.keyword = response.get("result").get("parameters").get("keyword").asText();
         }
         catch (Exception e)
         {

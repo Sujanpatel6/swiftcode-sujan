@@ -18,32 +18,30 @@ public class MessageActor extends UntypedActor {
     }
      private final ActorRef out;
      private FeedService feedService = new FeedService();
-     private AgentService AgentService = new AgentService();
+     private AgentService agentService = new AgentService();
      public MessageActor(ActorRef out)
      {
          this.out = out;
      }
 
     @Override
-    public void onReceive(Object message) throws Exception{
-         ObjectMapper mapper = new ObjectMapper();
-        Message messageObject = new Message();
-        if (message instanceof String) {
-            messageObject.text = (String) message;
-            messageObject.sender = Message.Sender.USER;
-            out.tell(mapper.writeValueAsString(messageObject),
-                    self());
-            String keyword = AgentService
-                    .getagentresponce((String) message).keyword;
-            if (!Objects.equals(keyword, "NOT_FOUND")) {
-                FeedResponse feedResponse = feedService.getFeedResponce(keyword);
-                messageObject.text = (feedResponse.title == null) ? "No results found" : "Showing results for: " + keyword;
-                messageObject.feedResponse = feedResponse;
-                messageObject.sender = Message.Sender.BOT;
-                out.tell(mapper.writeValueAsString(messageObject), self());
-
-            }
-
-        }
-    }
+    public void onReceive(Object message) throws Exception {
+       ObjectMapper mapper = new ObjectMapper();
+       Message messageObject = new Message();
+       if (message instanceof String) {
+           messageObject.text = (String) message;
+           messageObject.sender = Message.Sender.USER;
+           out.tell(mapper.writeValueAsString(messageObject),
+                   self());
+           String keyword = agentService
+                   .getagentresponce((String) message).keyword;
+           if(!Objects.equals(keyword, "NOT_FOUND")){
+               FeedResponse feedResponse = feedService.getFeedResponse(keyword);
+               messageObject.text = (feedResponse.title == null) ? "No results found" : "Showing results for: " + keyword;
+               messageObject.feedResponse = feedResponse;
+               messageObject.sender = Message.Sender.BOT;
+               out.tell(mapper.writeValueAsString(messageObject), self());
+           }
+       }
+   }
 }
