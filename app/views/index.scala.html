@@ -1,44 +1,59 @@
 <!DOCTYPE html>
 <html>
+    
+    <head>
+        <title>Chat</title>
+        <link href = "css/style.css" rel = "stylesheet">
+        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+          <link rel="stylesheet" href="/assets/stylesheets/main.css">
+    </head>
+    
+    <body ng-app = "chatApp" ng-controller = "chatController" layout = "row" layout-align = "center stretch" >
 
-<head>
-   <title> Chat</title>
-   <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
-   <link rel="stylesheet" href="/assets/stylesheets/main.css">
-</head>
+    <md-card flex = "none" layout = "column">
+        
+        <md-content flex = "90" id = "message-pane" style = "width : 800px;
+        background: url(http://mymodernmet.com/wp/wp-content/uploads/archive/NTTSmf-AYhg6zNCP3Qhs_1082142057.gif);
+        background-repeat:no-repeat;
+        background-size:cover;
+        background-position:center;">
 
-<body ng-app="chatApp" ng-controller="chatController" layout="row" layout-align="center stretch">
-   <md-card flex="none" layout="column">
-       <md-content flex="90" id="message-pane" style="width: 800px;
-       background: url(https://media.tenor.com/images/deaa76f1e4c9de618f246e831af9a635/tenor.gif);
-       background-repeat:no-repeat;
-       background-size:cover;
-       background-position:right bottom">
-       </md-content>
-       <md-card flex="10" style="margin: 0px" layout="row" layout-align="space-between center" class="md-whiteframe-8dp">
-       <form flex="90" ng-submit="sendMessage()" layout="row">
-               <md-input-container flex="100">
-                   <label>Message</label>
-                   <input ng-model="userMessage">
-               </md-input-container>
-           </form>
-           <md-button flex="10" style="height: 100%; padding: 0px " class="md-icon-button " ng-click="sendMessage() ">
-               <md-icon style="height: 100%; padding: 0px; " md-svg-icon="/assets/images/ic_chat_48px.svg"></md-icon>
-           </md-button>
+        <div ng-repeat = "message in messages" layout = "column"
+          layout-align="{{message.sender=='BOT' ?
+          'start start':'start end'}}">
+            <md-card style = "max-width: 75%;
+            border-radius: 10px; padding: 10px; font-size: 15px;"
+            ng-style="message.sender=='BOT' ?
+            {'background-color':'#d3d3d3'}:
+            {'background-color':'#76B1C4'}">
+            <span>{{message.text}}</span>
+            <span ng-bind-html="trust(message.feedResponse.description)">{{message.feedResponse.description}}</span>
+       
+<span layout-align="end end" text-style="left-bottom: 4px; float: right; color: #666666 ; font-size: 10px;"> {{message.time}} </span>
+        </md-card>
+        </div>
+        
+        </md-content>
+        
+        <md-card flex="10" style="margin: 0px" layout="row" layout-align="space-between center" class="md-whiteframe-8dp">
+        <form flex="90" ng-submit="sendMessage()" layout="row">
+              <md-input-container flex="100">
+                  <label>Message</label>
+                  <input ng-model="userMessage">
+              </md-input-container>
+          </form>
+                 <md-button flex="10" style="height: 100%; padding: 0px " class="md-icon-button " ng-click="sendMessage() ">
+              <md-icon style="height: 100%; padding: 0px; " md-svg-icon="/assets/images/slack.jpg"></md-icon>
+          </md-button>
+        </md-card>
+    
+    </md-card>
 
-
-hello vade
-
-       </md-card>
-   </md-card>
-   <!-- Scripts -->
-   <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
-   <script src="/assets/javascript/chat.js"></script>
-</body>
-
+   <script src = "/assets/javascript/chat.js"></script>
 </html>
